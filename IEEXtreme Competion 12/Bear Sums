@@ -1,0 +1,76 @@
+// Don't place your source in a package
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+// Please name your class Main
+class Main {
+
+
+public static String findSumSet (int numElements,int sum, int[] set) { //finds the two integer values that add up to the sum that are the closest together in the array
+        int gap = 0; //gap between numbers to check, check closest neighbour's number first, then neighbour's neighbour, etc 
+        boolean match = false; //tracks if match is found
+        int s1 = 0; //holds first value that adds up to sum
+        int s2 = 0; //holds second value that adds up to sum
+        String output = ""; //return two values as string
+
+        /*for loop based on number of "umbrellas" -- "levels" of how many neighbours to check (ex. in a 4 element array, you can check your neighour [gap = 1]
+  			* you can check your neighbour's neighbour [gap = 2], you can check your neighbour's neighbour's neighour [gap = 3] -- therefore 3 umbrella levels*/
+        for (int x = numElements - 1; x > 0; x--) {
+            gap = gap + 1; //increase gap
+          
+            /*for loop based on how many checks per umbrella level - when gap = 1 in a 4 number set array, there are 3 checks -- 1 compare 2, 2 compare 3, 3 compare 4
+             * when gap = 2, there are 2 checks -- 1 compare 3, 2 compare 4, * when gap = 3, there is 1 check, 1 compare 4 */
+            for (int y = 0; y < x; y++) {
+                if (set[y] + set[y + gap] == sum) {//if numbers across gap add up the wanted sum, then match is found
+                	match = true;//match is found
+                	s1 = set[y]; //set first value
+                	s2 = set[y + gap]; //set second value
+                	break; //stop checking other numbers
+                 }
+             }
+
+            if (match == true) {
+            break; //break out of larger for loop as well
+            }
+        }
+
+        //return two values as string
+        if (match == true) {
+            if (s1 > s2 || s1 == s2) { //output two strings in numerically increasing order
+                output = s2 + " " + s1;
+            }
+            else {
+                 output = s1 + " " + s2;
+            }
+        }
+        else { //if match == false, then return "!OK", no two values found
+            output = "!OK";
+        }
+        return output; //return output
+ }
+
+
+    public static void main(String[] args) throws java.lang.Exception {
+        Scanner in = new Scanner(System.in);
+        int numTests = in.nextInt(); //number of tests wanted to test
+        String outputs = ""; //outputs to later print out
+      
+      //for loop for each test, grab sum wanted and # of elements
+        for (int x = 0; x < numTests; x++) {
+            int sum = in.nextInt();
+            int numElements = in.nextInt();
+            int[] set = new int[numElements];
+          
+					//fill in set inputted
+            for (int y = 0; y < numElements; y++) {
+                set[y] = in.nextInt();
+            }
+            //call function to find two numbers that equal sum
+            String output = Main.findSumSet(numElements,sum, set);
+            outputs += output + "\n"
+            
+        }
+            System.out.println(outputs); //print out sum
+    }
+}
